@@ -1,4 +1,4 @@
-import { QtumContractFactory as ContractFactory } from './QtumContractFactory';
+import { HtmlcoinContractFactory as ContractFactory } from './HtmlcoinContractFactory';
 import { isStandard, hasByteCode } from './ContractJSON';
 // @ts-ignore
 export async function deployContract(wallet, factoryOrContractJson, args = [], overrideOptions = {}) {

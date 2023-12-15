@@ -2,30 +2,30 @@
 const { BigNumber } = require("@ethersproject/bignumber");
 const { expect } = require("chai");
 const { ethers } = require("ethers")
-const { QtumWallet } = require("../../build/main/lib/QtumWallet");
-const { QtumProvider } = require("../../build/main/lib/QtumProvider");
+const { HtmlcoinWallet } = require("../../build/main/lib/HtmlcoinWallet");
+const { HtmlcoinProvider } = require("../../build/main/lib/HtmlcoinProvider");
 const {
-    QtumContractFactory,
-} = require("../../build/main/lib/QtumContractFactory");
+    HtmlcoinContractFactory,
+} = require("../../build/main/lib/HtmlcoinContractFactory");
 const { generateContractAddress } = require('../../build/main/lib/helpers/utils')
 const BYTECODE = "608060405234801561001057600080fd5b506040516020806100f2833981016040525160005560bf806100336000396000f30060806040526004361060485763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166360fe47b18114604d5780636d4ce63c146064575b600080fd5b348015605857600080fd5b5060626004356088565b005b348015606f57600080fd5b506076608d565b60408051918252519081900360200190f35b600055565b600054905600a165627a7a7230582049a087087e1fc6da0b68ca259d45a2e369efcbb50e93f9b7fa3e198de6402b810029"
 const ABI = [{ "inputs": [], "name": "get", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "x", "type": "uint256" }], "name": "set", "outputs": [], "stateMutability": "nonpayable", "type": "function" }]
-const provider = new QtumProvider("http://localhost:23890");
+const provider = new HtmlcoinProvider("http://localhost:23890");
 
 // hash160PubKey/address -> 0xcdf409a70058bfc54ada1ee3422f1ef28d0d267d
-const signer = new QtumWallet(
+const signer = new HtmlcoinWallet(
     "99dda7e1a59655c9e02de8592be3b914df7df320e72ce04ccf0427f9a366ec6e",
     provider
 );
 // hash160PubKey/address -> 0x30a41759e2fec594fbb90ea2b212c9ef8074e227
-const signerNoQtum = new QtumWallet(
+const signerNoHtmlcoin = new HtmlcoinWallet(
     "61fd08e21110d908cf8dc20bb243a96e2dc0d29169b4fec09594c39e4384125a",
     provider
 );
 
-describe("QtumContractFactory", function () {
-    it("should deploy correctly given the deployer has enough QTUM to cover gas", async function () {
-        const simpleStore = new QtumContractFactory(ABI, BYTECODE, signer);
+describe("HtmlcoinContractFactory", function () {
+    it("should deploy correctly given the deployer has enough HTMLCOIN to cover gas", async function () {
+        const simpleStore = new HtmlcoinContractFactory(ABI, BYTECODE, signer);
         const deployment = await simpleStore.deploy({
             gasLimit: "0x2dc6c0", gasPrice: "0x190"
         });
@@ -41,8 +41,8 @@ describe("QtumContractFactory", function () {
         await setVal.wait()
         expect(BigNumber.from(getVal).toNumber()).to.equal(BigNumber.from("0x00").toNumber());
     });
-    it("can be connected to a QtumWallet signer.", async function () {
-        const simpleStore = new QtumContractFactory(ABI, BYTECODE);
+    it("can be connected to a HtmlcoinWallet signer.", async function () {
+        const simpleStore = new HtmlcoinContractFactory(ABI, BYTECODE);
         const connectedSimpleStore = simpleStore.connect(signer);
         if (!!connectedSimpleStore.signer) {
             const deployment = await connectedSimpleStore.deploy({
@@ -58,17 +58,17 @@ describe("QtumContractFactory", function () {
         }
     });
     it("should reject if the deployer tries sending a value", async function () {
-        const simpleStore = new QtumContractFactory(ABI, BYTECODE, signer);
+        const simpleStore = new HtmlcoinContractFactory(ABI, BYTECODE, signer);
         try {
             await simpleStore.deploy({
                 gasLimit: "0x2dc6c0", gasPrice: "0x190", value: "0xffffff"
             });
         } catch (err) {
-            expect(err.reason).to.equal("You cannot send QTUM while deploying a contract. Try deploying again without a value.")
+            expect(err.reason).to.equal("You cannot send HTMLCOIN while deploying a contract. Try deploying again without a value.")
         }
     });
     it("should fail as the deployer has no UTXOs to spend", async function () {
-        const simpleStore = new QtumContractFactory(ABI, BYTECODE, signerNoQtum);
+        const simpleStore = new HtmlcoinContractFactory(ABI, BYTECODE, signerNoHtmlcoin);
         try {
             await simpleStore.deploy({
                 gasLimit: "0x2dc6c0", gasPrice: "0x190"
