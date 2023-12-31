@@ -373,6 +373,7 @@ export async function addVins(
 ): Promise<Array<any>> {
     // minimum gas price is 40 satoshi
     // minimum sat/kb is 4000
+    // ^wrong
     const gasPrice = BigNumberEthers.from(gasPriceString);
     const minimumSatoshiPerByte = 4;
     if (gasPrice.lt(BigNumberEthers.from(minimumSatoshiPerByte))) {
@@ -812,7 +813,7 @@ export async function serializeTransactionWith(
     // something is considered dust
     checkLostPrecisionInGasPrice(BigNumberEthers.from(tx.gasPrice).toNumber());
     // 40 satoshi gasPrice => 400 satoshi/byte which is the minimum relay fee
-    const satoshiPerByte = BigNumberEthers.from(tx.gasPrice).mul(10);
+    const satoshiPerByte = BigNumberEthers.from(tx.gasPrice);
 
     const gas = BigNumberEthers.from(BigNumberEthers.from(tx.gasPrice).mul(BigNumberEthers.from(tx.gasLimit).toNumber()).toString());
     const nonContractTx = transactionType === GLOBAL_VARS.P2PKH;
