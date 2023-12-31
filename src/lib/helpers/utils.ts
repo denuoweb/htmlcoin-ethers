@@ -374,7 +374,7 @@ export async function addVins(
     // minimum gas price is 40 satoshi
     // minimum sat/kb is 4000
     const gasPrice = BigNumberEthers.from(gasPriceString);
-    const minimumSatoshiPerByte = 400;
+    const minimumSatoshiPerByte = 4;
     if (gasPrice.lt(BigNumberEthers.from(minimumSatoshiPerByte))) {
         throw new Error("Gas price lower than minimum relay fee: " + gasPriceString + " < " + minimumSatoshiPerByte);
     }
@@ -645,7 +645,7 @@ export function parseSignedTransaction(transaction: string): Transaction {
         gasPrice: BigNumberEthers.from("0x28"),
         data: "",
         value: BigNumberEthers.from("0x0"),
-        chainId: 81,
+        chainId: 4444,
     };
     // Set hash (double sha256 of raw TX string)
     const sha256HashFirst = sha256().update(transaction, "hex").digest("hex")
